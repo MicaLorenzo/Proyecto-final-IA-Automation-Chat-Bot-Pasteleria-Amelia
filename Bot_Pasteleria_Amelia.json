@@ -1,0 +1,3187 @@
+{
+  "name": "Proyecto Final IA",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {
+          "messageStatusUpdates": [
+            "failed"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        -704,
+        -112
+      ],
+      "id": "b9dc7444-b0cf-45f8-9223-eae62e182672",
+      "name": "Mensaje de cliente",
+      "webhookId": "7cf781f6-9184-4971-aeb4-2fcdb77aca7b",
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "w3CyB86HfjdU2739",
+          "name": "WhatsApp OAuth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "daf4ec55-df8a-4d58-9e1b-b0f8e360937a",
+              "leftValue": "={{ $json.messages }}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -544,
+        -112
+      ],
+      "id": "3e1e85c2-a131-4369-827a-e80d3a855b56",
+      "name": "¿Es un mensaje?"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "={{ $('Mensaje de cliente').item.json.metadata.phone_number_id }}",
+        "recipientPhoneNumber": "=   {{ '54' + $('Mensaje de cliente').item.json.messages[0].from.slice(3, 7) + '15' + $('Mensaje de cliente').item.json.messages[0].from.slice(7) }}",
+        "textBody": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        1168,
+        -48
+      ],
+      "id": "a1e3fc0e-5719-4f16-be37-41f909ea8ed1",
+      "name": "Responder al cliente",
+      "webhookId": "3bf8845a-0c9f-4504-9b96-7d35f4e31716",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "ILt93lDLqKZ2LInV",
+          "name": "WhatsApp account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "value": "appDpbouNHfnobXDl",
+          "mode": "list",
+          "cachedResultName": "Pastelería Amelia- Pedidos",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblPnDugpyQ8uW5OJ",
+          "mode": "list",
+          "cachedResultName": "Clientes",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl/tblPnDugpyQ8uW5OJ"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Telefono del cliente": "=     {{ $('Mensaje de cliente').item.json.messages[0].from }}",
+            "Nombre": "=     {{ $('Mensaje de cliente').item.json.contacts[0].profile.name }}"
+          },
+          "matchingColumns": [
+            "Telefono del cliente"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Telefono del cliente",
+              "displayName": "Telefono del cliente",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Telegram Chat ID",
+              "displayName": "Telegram Chat ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Primera Interacción",
+              "displayName": "Primera Interacción",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Notas",
+              "displayName": "Notas",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Pedidos",
+              "displayName": "Pedidos",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -304,
+        -128
+      ],
+      "id": "8553cd60-8fc9-4125-b618-a6664ad71b19",
+      "name": "Guardar clientes",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "4QQXdFnze7blFw3o",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-sonnet-4-5-20250929",
+          "mode": "list",
+          "cachedResultName": "Claude Sonnet 4.5"
+        },
+        "options": {
+          "maxTokensToSample": 1000
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.6,
+      "position": [
+        576,
+        64
+      ],
+      "id": "efbf19ea-a785-4038-8327-37f901fcadeb",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "vOWWUhvoW6CEQt2w",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Mensaje de cliente').item.json.messages[0].from + '-v39' }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        720,
+        112
+      ],
+      "id": "30b4c17c-c5dc-4929-bfe1-b9febeaf6256",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appDpbouNHfnobXDl",
+          "mode": "list",
+          "cachedResultName": "Pastelería Amelia- Pedidos",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblBVKAKTd3bn9kA0",
+          "mode": "list",
+          "cachedResultName": "Productos",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl/tblBVKAKTd3bn9kA0"
+        },
+        "filterByFormula": "={Activo}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2.2,
+      "position": [
+        928,
+        112
+      ],
+      "id": "1348790e-c8fa-4fd7-b7d3-ba9ba76865ac",
+      "name": "Leer productos",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "4QQXdFnze7blFw3o",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Devuelve TODAS las masas, rellenos y decoraciones disponibles, con su costo extra. El campo Tipo indica si es Masa, Rellenos o Decoración. Usala SIEMPRE antes de mostrar o cotizar cualquier sabor.",
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appDpbouNHfnobXDl",
+          "mode": "list",
+          "cachedResultName": "Pastelería Amelia- Pedidos",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblR0SIFPC0x0XY0j",
+          "mode": "list",
+          "cachedResultName": "Sabores",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl/tblR0SIFPC0x0XY0j"
+        },
+        "filterByFormula": "={Activo}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2.2,
+      "position": [
+        736,
+        304
+      ],
+      "id": "9bb1ced9-4fe9-4368-b153-cf13b9a611e2",
+      "name": "Leer sabores",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "4QQXdFnze7blFw3o",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=  {{ $('Mensaje de cliente').item.json.messages[0].text.body }}",
+        "options": {
+          "systemMessage": "=Sos la secretaria virtual de Pastelería Amelia. Sos amable, cálida y breve, como en un chat de WhatsApp. Usá algún emoji, sin exagerar. Para resaltar texto usá *asteriscos* (formato de WhatsApp).\n\nDATOS DEL DÍA:\n- Hoy es {{ $now.setLocale('es').toFormat(\"cccc dd/MM/yyyy\") }}.\n- Los pedidos con entrega a partir del {{ $now.plus({days: 5}).toFormat('dd/MM/yyyy') }} no tienen recargo.\n- El cliente se llama {{ $('Mensaje de cliente').item.json.contacts[0].profile.name }}.\n\nCONDICIONES DE LA PASTELERÍA:\n- Horario de entrega: de 09:00 a 15:00 hs.\n- No hacemos entregas los domingos.\n- Disponibilidad: si en la fecha hay un evento llamado \"Sin entregas\", esa fecha NO está disponible. Cualquier otro evento no bloquea el día.\n- Recargo por urgencia: si la fecha de entrega es ANTERIOR al {{ $now.plus({days: 5}).toFormat('dd/MM/yyyy') }}, sumá $30.000 una sola vez por pedido. Si la fecha es ese día o posterior, NO hay recargo.\n- Seña: 50% del total. Se pide recién cuando Micaela aprueba el pedido, y los datos para transferir se envían por este chat en ese momento. Si el cliente pregunta por la seña o la forma de pago antes, explicale esto, pero nunca des datos de pago vos.\n\nREGLAS GENERALES:\n- OBLIGATORIO: antes de mostrar un resumen o presupuesto, llamá en ese mismo turno a \"Leer productos\" y \"Ver disponibilidad\". Nunca uses precios de mensajes anteriores.\n- Cuando el cliente nombre un producto o una cantidad de porciones, llamá a \"Leer productos\" en ese mismo turno y verificá las porciones mínimas. Si pide menos que el mínimo, decile cuál es el mínimo del producto y preguntale si quiere esa cantidad. No sigas con el pedido hasta resolverlo.\n- Seguí los PASOS DEL PEDIDO en orden, haciendo una sola pregunta por mensaje y mostrando los menús numerados, aunque el cliente te dé varios datos juntos. Si ya te dio un dato, usalo y pasá al paso siguiente.\n- Cuando el cliente mencione una fecha, verificala directamente con \"Ver disponibilidad\" en ese mismo turno. No pidas que confirme la fecha ni hagas comentarios sobre el calendario.\n- Nunca inventes productos, sabores ni precios. Consultá siempre las herramientas \"Leer productos\" y \"Leer sabores\".\n- Nunca digas \"un momento\", \"ya verifico\" ni nada parecido. Si necesitás una herramienta, usala en ese mismo turno y respondé directamente con el resultado.\n- MUY IMPORTANTE: cada producto tiene un campo \"Personalización\". Si dice \"NO se personaliza\", no preguntes masa, relleno ni decoración: preguntá solo la cantidad de porciones.\n- Si el cliente pregunta precios sin dar detalles, explicale que para cotizar necesitás que responda unas preguntas y mostrale el menú.\n- Si el cliente quiere cambiar algo ANTES de confirmar, ajustá el pedido, recalculá el presupuesto y mostrá el resumen de nuevo.\n- Nunca digas que el pedido está anotado o guardado si no llamaste antes a la herramienta \"Guardar Pedido\".\n\nFORMATO DE LOS MENÚS:\n- Mostrá las opciones como lista numerada. La última opción siempre es \"✍️ Otra cosa (escribila)\".\n- En el menú de productos, aclarale que puede elegir varios (por ejemplo: \"1 y 3\"). En masa, relleno y decoración se elige una sola opción por producto.\n- Al final de cada menú agregá estas dos líneas:\n  \"↩️ Escribí *volver* para ir al paso anterior\"\n  \"👩‍🍳 Escribí *Micaela* para hablar con ella\"\n- Si el cliente escribe \"volver\", repetí la pregunta anterior.\n\nPASOS DEL PEDIDO:\n1. Preguntá qué productos quiere (menú de productos).\n2. Por cada producto elegido, fijate su campo \"Personalización\":\n   - Si dice \"Se personaliza\": preguntá masa, relleno, decoración y cantidad de porciones.\n   - Si dice \"NO se personaliza\": preguntá solo la cantidad de porciones. El producto se vende como dice su descripción.\n   Nunca aceptes menos que las porciones mínimas.\n3. Pedí la fecha y la hora de entrega, y verificá la fecha con \"Ver disponibilidad\".\n   - Si no está disponible, pedile otra fecha.\n   - Si la hora está fuera del horario de 09:00 a 15:00, explicale que solo entregamos en ese horario y ofrecele dos alternativas: un horario dentro del rango el mismo día, o el día anterior dentro de ese horario. Nunca ofrezcas un día posterior a la fecha que pidió.\n   - Si es un pedido urgente, avisale amablemente que tiene un recargo de $30.000 y preguntale si quiere mantener esa fecha o elegir otra.\n4. Solo si algún producto dice \"Se personaliza\": pedí detalles del diseño (colores, texto) y una foto de referencia (opcional). Si ningún producto se personaliza, saltá este paso.\n5. Calculá el presupuesto de cada producto: precio por porción × porciones + costos extras de los sabores elegidos (los extras se suman una sola vez por producto). Si es urgente, sumá $30.000 una sola vez al total. Mostrá un resumen con el detalle, la fecha, la hora y el total.\n6. Preguntá si confirma el pedido.\n7. Si confirma, primero llamá a \"Guardar Pedido\" con estado \"Listo para revisión\" y después respondé. En los detalles del pedido incluí siempre la hora de entrega (formato HH:MM). Nunca digas que el pedido está confirmado: decí que quedó registrado, que Micaela lo va a revisar y le confirma por este mismo chat, y que en ese momento le va a llegar el pedido de la seña del 50%. Todavía NO pidas la seña ni des datos de pago.\n\nDERIVAR A MICAELA:\nSi el cliente pide hablar con Micaela, o quiere un producto o sabor que no está en el catálogo:\n1. Llamá a \"Guardar Pedido\" con estado \"Necesita a Micaela\" y anotá en los detalles qué necesita el cliente.\n2. Respondé que Micaela le va a escribir por este mismo chat a la brevedad.\nNo intentes resolver vos lo que no está en el catálogo."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        736,
+        -80
+      ],
+      "id": "5783bb7e-797b-4864-ac20-c95d9628b05d",
+      "name": "Secretaria",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Consulta los pedidos agendados en una fecha. Si ese día ya hay 3 o más eventos, la fecha no está disponible.",
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "micalorenzo1206@gmail.com",
+          "mode": "list",
+          "cachedResultName": "micalorenzo1206@gmail.com"
+        },
+        "returnAll": true,
+        "timeMin": "=   {{ $fromAI('desde', 'Inicio del día a consultar en formato ISO, por ejemplo 2026-10-23T00:00:00') }}",
+        "timeMax": "=   {{ $fromAI('hasta', 'Fin del día a consultar en formato ISO, por ejemplo 2026-10-23T23:59:59') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        880,
+        304
+      ],
+      "id": "ad1e61d2-51da-451b-85c1-1efabb422111",
+      "name": "Ver disponibilidad",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "XyQlqNMYZi9VALPg",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Guarda el pedido en Airtable. Usala cada vez que el cliente confirma un pedido. Si un intento anterior dio error, volvé a usarla.",
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appDpbouNHfnobXDl",
+          "mode": "list",
+          "cachedResultName": "Pastelería Amelia- Pedidos",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblqEG06slS0nvPHY",
+          "mode": "list",
+          "cachedResultName": "Pedidos",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl/tblqEG06slS0nvPHY"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Referencia": "={{ 'Pedido ' + $now.toFormat('dd/MM HH:mm') }}",
+            "Clientes": "={{ [$('Guardar clientes').item.json.id] }}",
+            "Diseño": "={{ $fromAI('diseno', 'Colores, texto y detalles de la decoración') }}",
+            "Detalles del pedido": "={{ $fromAI('detalle', 'Cada producto con sus opciones elegidas y porciones, o el motivo de la consulta si es para Micaela') }}",
+            "Teléfono": "={{ $('Mensaje de cliente').item.json.messages[0].from }}",
+            "Fecha de entrega": "={{ $fromAI('fecha', 'Fecha de entrega en formato YYYY-MM-DD', 'string') }}",
+            "Presupuesto IA": "={{ $fromAI('presupuesto', 'Total en pesos, solo el número', 'number') }}",
+            "Estado": "={{ $fromAI('estado', 'Escribí exactamente \"Listo para revisión\" si el cliente confirmó el pedido, o exactamente \"Necesita a Micaela\" si pidió hablar con Micaela o es un pedido especial') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Referencia",
+              "displayName": "Referencia",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Clientes",
+              "displayName": "Clientes",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Producto",
+              "displayName": "Producto",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Torta",
+                  "value": "Torta"
+                },
+                {
+                  "name": "Tarta frutal",
+                  "value": "Tarta frutal"
+                },
+                {
+                  "name": "Brownie gigante",
+                  "value": "Brownie gigante"
+                },
+                {
+                  "name": "Tarta de coco",
+                  "value": "Tarta de coco"
+                },
+                {
+                  "name": "Postre",
+                  "value": "Postre"
+                },
+                {
+                  "name": "   torta",
+                  "value": "   torta"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Detalles del pedido",
+              "displayName": "Detalles del pedido",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Diseño",
+              "displayName": "Diseño",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Fecha de entrega",
+              "displayName": "Fecha de entrega",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Listo para revisión",
+                  "value": "Listo para revisión"
+                },
+                {
+                  "name": "Necesita a Micaela",
+                  "value": "Necesita a Micaela"
+                },
+                {
+                  "name": "Esperando seña",
+                  "value": "Esperando seña"
+                },
+                {
+                  "name": "Confirmado",
+                  "value": "Confirmado"
+                },
+                {
+                  "name": "Rechazado",
+                  "value": "Rechazado"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Presupuesto IA",
+              "displayName": "Presupuesto IA",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Turno de calendario",
+              "displayName": "Turno de calendario",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Comprobante de pago",
+              "displayName": "Comprobante de pago",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Mensaje original",
+              "displayName": "Mensaje original",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Errores",
+              "displayName": "Errores",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Foto de referencia",
+              "displayName": "Foto de referencia",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Teléfono",
+              "displayName": "Teléfono",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Aprobación enviada",
+              "displayName": "Aprobación enviada",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Hora de entrega",
+              "displayName": "Hora de entrega",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "typecast": true
+        }
+      },
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2.2,
+      "position": [
+        1056,
+        128
+      ],
+      "id": "2a9414fd-bec3-4881-936f-a913dec6ee42",
+      "name": "Guardar Pedido",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "4QQXdFnze7blFw3o",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appDpbouNHfnobXDl",
+          "mode": "list",
+          "cachedResultName": "Pastelería Amelia- Pedidos",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblqEG06slS0nvPHY",
+          "mode": "list",
+          "cachedResultName": "Pedidos",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl/tblqEG06slS0nvPHY"
+        },
+        "filterByFormula": "=AND(TRIM({Teléfono}) = '{{ $('Guardar clientes').item.json.fields[\"Telefono del cliente\"].trim() }}', {Estado} = 'Listo para revisión', NOT({Aprobación enviada}))",
+        "returnAll": false,
+        "limit": 1,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        1360,
+        -48
+      ],
+      "id": "c11407ff-15ce-4827-b48f-2ba65e3fe127",
+      "name": "Buscar pedido listo",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "4QQXdFnze7blFw3o",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appDpbouNHfnobXDl",
+          "mode": "list",
+          "cachedResultName": "Pastelería Amelia- Pedidos",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblqEG06slS0nvPHY",
+          "mode": "list",
+          "cachedResultName": "Pedidos",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl/tblqEG06slS0nvPHY"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Aprobación enviada": false,
+            "id": "={{ $json.id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Referencia",
+              "displayName": "Referencia",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Clientes",
+              "displayName": "Clientes",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Producto",
+              "displayName": "Producto",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Torta",
+                  "value": "Torta"
+                },
+                {
+                  "name": "Tarta frutal",
+                  "value": "Tarta frutal"
+                },
+                {
+                  "name": "Brownie gigante",
+                  "value": "Brownie gigante"
+                },
+                {
+                  "name": "Tarta de coco",
+                  "value": "Tarta de coco"
+                },
+                {
+                  "name": "Postre",
+                  "value": "Postre"
+                },
+                {
+                  "name": "   torta",
+                  "value": "   torta"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Detalles del pedido",
+              "displayName": "Detalles del pedido",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Diseño",
+              "displayName": "Diseño",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Fecha de entrega",
+              "displayName": "Fecha de entrega",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Listo para revisión",
+                  "value": "Listo para revisión"
+                },
+                {
+                  "name": "Necesita a Micaela",
+                  "value": "Necesita a Micaela"
+                },
+                {
+                  "name": "Esperando seña",
+                  "value": "Esperando seña"
+                },
+                {
+                  "name": "Confirmado",
+                  "value": "Confirmado"
+                },
+                {
+                  "name": "Rechazado",
+                  "value": "Rechazado"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Presupuesto IA",
+              "displayName": "Presupuesto IA",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Turno de calendario",
+              "displayName": "Turno de calendario",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Comprobante de pago",
+              "displayName": "Comprobante de pago",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Mensaje original",
+              "displayName": "Mensaje original",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Errores",
+              "displayName": "Errores",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Foto de referencia",
+              "displayName": "Foto de referencia",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Teléfono",
+              "displayName": "Teléfono",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Aprobación enviada",
+              "displayName": "Aprobación enviada",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        1552,
+        -48
+      ],
+      "id": "53108cb5-461c-4952-a5d7-547300252278",
+      "name": "Marcar aprobación enviada",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "4QQXdFnze7blFw3o",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d94f60d8-e4bd-4936-a9fd-1058f952e043",
+              "leftValue": "={{ $json.data.approved }}",
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1936,
+        -48
+      ],
+      "id": "7f22fa3e-b252-4d76-a0bd-236a058669cb",
+      "name": "¿Aprobado?"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "sendTo": "micalorenzo1206@gmail.com",
+        "subject": "=   Nuevo pedido para aprobar: {{ $json.fields.Referencia }}",
+        "message": "=   Pedido: {{ $json.fields[\"Detalles del pedido\"] }}\n   Diseño: {{ $json.fields[\"Diseño\"] }}\n   Fecha de entrega: {{ $json.fields[\"Fecha de entrega\"] }}\n   Presupuesto: ${{ $json.fields[\"Presupuesto IA\"] }}\n   Teléfono: {{ $json.fields[\"Teléfono\"] }}",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double",
+            "approveLabel": "Aprobar",
+            "disapproveLabel": "Rechazar"
+          }
+        },
+        "options": {
+          "limitWaitTime": {
+            "values": {
+              "resumeAmount": 24
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1744,
+        -48
+      ],
+      "id": "769944ad-79e9-4fd3-89a0-d6b52db0fb0a",
+      "name": "Aprobación de Micaela",
+      "webhookId": "b30e461e-d6df-4e3a-b461-985b43d8cab3",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Ej6TgBnCZdsp1ijk",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "micalorenzo1206@gmail.com",
+          "mode": "list",
+          "cachedResultName": "micalorenzo1206@gmail.com"
+        },
+        "start": "={{ $('Buscar pedido listo').first().json.fields[\"Fecha de entrega\"] }}",
+        "end": "={{ DateTime.fromISO($('Buscar pedido listo').first().json.fields[\"Fecha de entrega\"]).plus({ days: 1 }).toISODate() }}",
+        "additionalFields": {
+          "allday": "yes",
+          "description": "=Teléfono: {{ $('Buscar pedido listo').first().json.fields[\"Teléfono\"] }}",
+          "summary": "={{ $('Buscar pedido listo').first().json.fields.Referencia }} - {{ $('Buscar pedido listo').first().json.fields[\"Detalles del pedido\"] }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        2160,
+        -96
+      ],
+      "id": "a645dfdc-23ae-42b6-b33e-6ba5611a7c73",
+      "name": "Agendar entrega",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "XyQlqNMYZi9VALPg",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appDpbouNHfnobXDl",
+          "mode": "list",
+          "cachedResultName": "Pastelería Amelia- Pedidos",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblqEG06slS0nvPHY",
+          "mode": "list",
+          "cachedResultName": "Pedidos",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl/tblqEG06slS0nvPHY"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Buscar pedido listo').first().json.id }}",
+            "Estado": "Esperando seña"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Referencia",
+              "displayName": "Referencia",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Clientes",
+              "displayName": "Clientes",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Producto",
+              "displayName": "Producto",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Torta",
+                  "value": "Torta"
+                },
+                {
+                  "name": "Tarta frutal",
+                  "value": "Tarta frutal"
+                },
+                {
+                  "name": "Brownie gigante",
+                  "value": "Brownie gigante"
+                },
+                {
+                  "name": "Tarta de coco",
+                  "value": "Tarta de coco"
+                },
+                {
+                  "name": "Postre",
+                  "value": "Postre"
+                },
+                {
+                  "name": "   torta",
+                  "value": "   torta"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Detalles del pedido",
+              "displayName": "Detalles del pedido",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Diseño",
+              "displayName": "Diseño",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Fecha de entrega",
+              "displayName": "Fecha de entrega",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Listo para revisión",
+                  "value": "Listo para revisión"
+                },
+                {
+                  "name": "Necesita a Micaela",
+                  "value": "Necesita a Micaela"
+                },
+                {
+                  "name": "Esperando seña",
+                  "value": "Esperando seña"
+                },
+                {
+                  "name": "Confirmado",
+                  "value": "Confirmado"
+                },
+                {
+                  "name": "Rechazado",
+                  "value": "Rechazado"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Presupuesto IA",
+              "displayName": "Presupuesto IA",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Turno de calendario",
+              "displayName": "Turno de calendario",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Comprobante de pago",
+              "displayName": "Comprobante de pago",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Mensaje original",
+              "displayName": "Mensaje original",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Errores",
+              "displayName": "Errores",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Foto de referencia",
+              "displayName": "Foto de referencia",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Teléfono",
+              "displayName": "Teléfono",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Aprobación enviada",
+              "displayName": "Aprobación enviada",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        2336,
+        -112
+      ],
+      "id": "988f960a-a224-4b15-a3f4-3eeec7ec52f8",
+      "name": "Estado Esperando seña",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "4QQXdFnze7blFw3o",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "={{ $('Mensaje de cliente').first().json.metadata.phone_number_id }}",
+        "recipientPhoneNumber": "={{ '54' + $('Mensaje de cliente').first().json.messages[0].from.slice(3, 7) + '15' + $('Mensaje de cliente').first().json.messages[0].from.slice(7) }}",
+        "textBody": "=¡Tu pedido fue aprobado! 🎂\n{{ $('Buscar pedido listo').first().json.fields[\"Detalles del pedido\"] }}\nEntrega: {{ $('Buscar pedido listo').first().json.fields[\"Fecha de entrega\"] }}\nTotal: ${{ $('Buscar pedido listo').first().json.fields[\"Presupuesto IA\"].toLocaleString('es-AR') }}\n\nPara confirmarlo, transferí la seña del 50% (${{ Math.round($('Buscar pedido listo').first().json.fields[\"Presupuesto IA\"] * 0.5).toLocaleString('es-AR') }}) al alias PASTELERIA.AMELIA.MP y mandanos foto del comprobante por este chat.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        2512,
+        -112
+      ],
+      "id": "6cc6dc7a-2b87-4da9-96de-a270c97441ea",
+      "name": "Pedir seña",
+      "webhookId": "3bf8845a-0c9f-4504-9b96-7d35f4e31716",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "ILt93lDLqKZ2LInV",
+          "name": "WhatsApp account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "={{ $('Mensaje de cliente').first().json.metadata.phone_number_id }}",
+        "recipientPhoneNumber": "={{ '54' + $('Mensaje de cliente').first().json.messages[0].from.slice(3, 7) + '15' + $('Mensaje de cliente').first().json.messages[0].from.slice(7) }}",
+        "textBody": "=   ¡Hola! Lamentablemente no podemos tomar tu pedido para esa fecha 😔\n   Si querés, escribinos y armamos otra opción juntos.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        2368,
+        32
+      ],
+      "id": "7563c053-a455-4f9b-8f07-8a63b6bccedf",
+      "name": "Avisar rechazo",
+      "webhookId": "3bf8845a-0c9f-4504-9b96-7d35f4e31716",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "ILt93lDLqKZ2LInV",
+          "name": "WhatsApp account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appDpbouNHfnobXDl",
+          "mode": "list",
+          "cachedResultName": "Pastelería Amelia- Pedidos",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblqEG06slS0nvPHY",
+          "mode": "list",
+          "cachedResultName": "Pedidos",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl/tblqEG06slS0nvPHY"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Buscar pedido listo').first().json.id }}",
+            "Estado": "Rechazado"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Referencia",
+              "displayName": "Referencia",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Clientes",
+              "displayName": "Clientes",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Producto",
+              "displayName": "Producto",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Torta",
+                  "value": "Torta"
+                },
+                {
+                  "name": "Tarta frutal",
+                  "value": "Tarta frutal"
+                },
+                {
+                  "name": "Brownie gigante",
+                  "value": "Brownie gigante"
+                },
+                {
+                  "name": "Tarta de coco",
+                  "value": "Tarta de coco"
+                },
+                {
+                  "name": "Postre",
+                  "value": "Postre"
+                },
+                {
+                  "name": "   torta",
+                  "value": "   torta"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Detalles del pedido",
+              "displayName": "Detalles del pedido",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Diseño",
+              "displayName": "Diseño",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Fecha de entrega",
+              "displayName": "Fecha de entrega",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Listo para revisión",
+                  "value": "Listo para revisión"
+                },
+                {
+                  "name": "Necesita a Micaela",
+                  "value": "Necesita a Micaela"
+                },
+                {
+                  "name": "Esperando seña",
+                  "value": "Esperando seña"
+                },
+                {
+                  "name": "Confirmado",
+                  "value": "Confirmado"
+                },
+                {
+                  "name": "Rechazado",
+                  "value": "Rechazado"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Presupuesto IA",
+              "displayName": "Presupuesto IA",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Turno de calendario",
+              "displayName": "Turno de calendario",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Comprobante de pago",
+              "displayName": "Comprobante de pago",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Mensaje original",
+              "displayName": "Mensaje original",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Errores",
+              "displayName": "Errores",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Foto de referencia",
+              "displayName": "Foto de referencia",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Teléfono",
+              "displayName": "Teléfono",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Aprobación enviada",
+              "displayName": "Aprobación enviada",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        2160,
+        32
+      ],
+      "id": "48a3ed8f-900b-48ad-8755-eba57ea212c7",
+      "name": "Estado rechazado",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "4QQXdFnze7blFw3o",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appDpbouNHfnobXDl",
+          "mode": "list",
+          "cachedResultName": "Pastelería Amelia- Pedidos",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblqEG06slS0nvPHY",
+          "mode": "list",
+          "cachedResultName": "Pedidos",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl/tblqEG06slS0nvPHY"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Aprobación enviada": false,
+            "id": "={{ $json.id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Referencia",
+              "displayName": "Referencia",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Clientes",
+              "displayName": "Clientes",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Producto",
+              "displayName": "Producto",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Torta",
+                  "value": "Torta"
+                },
+                {
+                  "name": "Tarta frutal",
+                  "value": "Tarta frutal"
+                },
+                {
+                  "name": "Brownie gigante",
+                  "value": "Brownie gigante"
+                },
+                {
+                  "name": "Tarta de coco",
+                  "value": "Tarta de coco"
+                },
+                {
+                  "name": "Postre",
+                  "value": "Postre"
+                },
+                {
+                  "name": "   torta",
+                  "value": "   torta"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Detalles del pedido",
+              "displayName": "Detalles del pedido",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Diseño",
+              "displayName": "Diseño",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Fecha de entrega",
+              "displayName": "Fecha de entrega",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Listo para revisión",
+                  "value": "Listo para revisión"
+                },
+                {
+                  "name": "Necesita a Micaela",
+                  "value": "Necesita a Micaela"
+                },
+                {
+                  "name": "Esperando seña",
+                  "value": "Esperando seña"
+                },
+                {
+                  "name": "Confirmado",
+                  "value": "Confirmado"
+                },
+                {
+                  "name": "Rechazado",
+                  "value": "Rechazado"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Presupuesto IA",
+              "displayName": "Presupuesto IA",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Turno de calendario",
+              "displayName": "Turno de calendario",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Comprobante de pago",
+              "displayName": "Comprobante de pago",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Mensaje original",
+              "displayName": "Mensaje original",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Errores",
+              "displayName": "Errores",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Foto de referencia",
+              "displayName": "Foto de referencia",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Teléfono",
+              "displayName": "Teléfono",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Aprobación enviada",
+              "displayName": "Aprobación enviada",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        1568,
+        -368
+      ],
+      "id": "aea43db2-15d8-41ef-b720-d5bb75e76b00",
+      "name": "Marcar consulta enviada",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "4QQXdFnze7blFw3o",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "sendTo": "micalorenzo1206@gmail.com",
+        "subject": "=Un cliente necesita tu ayuda: {{ $('Buscar consulta').first().json.fields.Referencia }}",
+        "message": "=Consulta: {{ $('Buscar consulta').first().json.fields[\"Detalles del pedido\"] }}\nTeléfono: {{ $('Buscar consulta').first().json.fields[\"Teléfono\"] }}\nEscribí tu respuesta y se la enviamos al cliente por WhatsApp.",
+        "responseType": "freeText",
+        "options": {
+          "limitWaitTime": {
+            "values": {
+              "resumeAmount": 24
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1760,
+        -368
+      ],
+      "id": "349cf5fa-9832-4a23-a24e-f66392e879d9",
+      "name": "Consulta a Micaela",
+      "webhookId": "b30e461e-d6df-4e3a-b461-985b43d8cab3",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Ej6TgBnCZdsp1ijk",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appDpbouNHfnobXDl",
+          "mode": "list",
+          "cachedResultName": "Pastelería Amelia- Pedidos",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblqEG06slS0nvPHY",
+          "mode": "list",
+          "cachedResultName": "Pedidos",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl/tblqEG06slS0nvPHY"
+        },
+        "filterByFormula": "=AND(TRIM({Teléfono}) = '{{ $('Guardar clientes').item.json.fields[\"Telefono del cliente\"].trim() }}', {Estado} = 'Necesita a Micaela', NOT({Aprobación enviada}))",
+        "returnAll": false,
+        "limit": 1,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        1392,
+        -368
+      ],
+      "id": "b2816cc7-6811-4bc6-b42b-a5c66bb7f3e7",
+      "name": "Buscar consulta",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "4QQXdFnze7blFw3o",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "={{ $('Mensaje de cliente').first().json.metadata.phone_number_id }}",
+        "recipientPhoneNumber": "={{ '54' + $('Mensaje de cliente').first().json.messages[0].from.slice(3, 7) + '15' + $('Mensaje de cliente').first().json.messages[0].from.slice(7) }}",
+        "textBody": "=👩‍🍳 Micaela: {{ $json.data.text }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        1968,
+        -368
+      ],
+      "id": "28d84e50-e35c-488c-a316-be06ec46778d",
+      "name": "Respuesta de Micaela",
+      "webhookId": "3bf8845a-0c9f-4504-9b96-7d35f4e31716",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "ILt93lDLqKZ2LInV",
+          "name": "WhatsApp account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "771179f5-5ac5-42ee-826f-b2ec0fa95928",
+              "leftValue": "={{ $('Mensaje de cliente').item.json.messages[0].type }}",
+              "rightValue": "image",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -144,
+        -128
+      ],
+      "id": "2fcd1c7b-5a98-4228-acb8-200752adae8f",
+      "name": "¿Es una foto?"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appDpbouNHfnobXDl",
+          "mode": "list",
+          "cachedResultName": "Pastelería Amelia- Pedidos",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblqEG06slS0nvPHY",
+          "mode": "list",
+          "cachedResultName": "Pedidos",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl/tblqEG06slS0nvPHY"
+        },
+        "filterByFormula": "=AND(TRIM({Teléfono}) = '{{ $('Guardar clientes').item.json.fields[\"Telefono del cliente\"].trim() }}', {Estado} = 'Esperando seña')",
+        "returnAll": false,
+        "limit": 1,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        112,
+        -576
+      ],
+      "id": "82df7d9a-d41b-4458-9edd-61c5931ff90e",
+      "name": "Buscar pedido con seña",
+      "alwaysOutputData": true,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "4QQXdFnze7blFw3o",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "media",
+        "operation": "mediaUrlGet",
+        "mediaGetId": "=   {{ $('Mensaje de cliente').first().json.messages[0].image.id }}"
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        304,
+        -576
+      ],
+      "id": "3a3dcd20-c66b-4dd6-92ea-3cae356ca883",
+      "name": "Descargar foto",
+      "webhookId": "06161c30-1735-4aa5-ae9a-8a7102fa58d6",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "ILt93lDLqKZ2LInV",
+          "name": "WhatsApp account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "whatsAppApi",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        480,
+        -576
+      ],
+      "id": "056f7606-2ec6-4683-beba-7b3ade617af7",
+      "name": "Obtener imagen",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "ILt93lDLqKZ2LInV",
+          "name": "WhatsApp account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "micalorenzo1206@gmail.com",
+        "subject": "={{ $('Buscar pedido con seña').first().json.id ? 'Comprobante de seña - ' + $('Buscar pedido con seña').first().json.fields.Referencia : 'Foto de referencia - ' + $('Mensaje de cliente').first().json.contacts[0].profile.name }}",
+        "emailType": "text",
+        "message": "=Cliente: {{ $('Mensaje de cliente').first().json.contacts[0].profile.name }}\nTeléfono: {{ $('Guardar clientes').first().json.fields[\"Telefono del cliente\"].trim() }}\nLa foto va adjunta.",
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        656,
+        -576
+      ],
+      "id": "c128c8c4-b548-41f5-a9d9-448f91099fc4",
+      "name": "Mail a Micaela",
+      "webhookId": "3964092e-3b1f-4439-a0b9-5b66b758c3a3",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Ej6TgBnCZdsp1ijk",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "={{ $('Mensaje de cliente').first().json.metadata.phone_number_id }}",
+        "recipientPhoneNumber": "={{ '54' + $('Mensaje de cliente').first().json.messages[0].from.slice(3, 7) + '15' + $('Mensaje de cliente').first().json.messages[0].from.slice(7) }}",
+        "textBody": "={{ $('Buscar pedido con seña').first().json.id ? '¡Recibimos tu comprobante! 🎉 Tu pedido quedó confirmado. ¡Gracias!' : '¡Gracias por la foto! 📸 Se la pasamos a Micaela para tu pedido.' }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        816,
+        -576
+      ],
+      "id": "f1891de9-1b63-4042-953a-8f93d0464c14",
+      "name": "Responder foto",
+      "webhookId": "3bf8845a-0c9f-4504-9b96-7d35f4e31716",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "ILt93lDLqKZ2LInV",
+          "name": "WhatsApp account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "509ad2f4-32ce-4e04-903b-34c8254f008c",
+              "leftValue": "={{ $('Buscar pedido con seña').first().json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        960,
+        -576
+      ],
+      "id": "e558ff65-b908-47da-b1ff-9f549756857a",
+      "name": "¿Era comprobante?"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appDpbouNHfnobXDl",
+          "mode": "list",
+          "cachedResultName": "Pastelería Amelia- Pedidos",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblqEG06slS0nvPHY",
+          "mode": "list",
+          "cachedResultName": "Pedidos",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl/tblqEG06slS0nvPHY"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Buscar pedido con seña').first().json.id }}",
+            "Estado": "Confirmado"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Referencia",
+              "displayName": "Referencia",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Clientes",
+              "displayName": "Clientes",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Producto",
+              "displayName": "Producto",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Torta",
+                  "value": "Torta"
+                },
+                {
+                  "name": "Tarta frutal",
+                  "value": "Tarta frutal"
+                },
+                {
+                  "name": "Brownie gigante",
+                  "value": "Brownie gigante"
+                },
+                {
+                  "name": "Tarta de coco",
+                  "value": "Tarta de coco"
+                },
+                {
+                  "name": "Postre",
+                  "value": "Postre"
+                },
+                {
+                  "name": "   torta",
+                  "value": "   torta"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Detalles del pedido",
+              "displayName": "Detalles del pedido",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Diseño",
+              "displayName": "Diseño",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Fecha de entrega",
+              "displayName": "Fecha de entrega",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Listo para revisión",
+                  "value": "Listo para revisión"
+                },
+                {
+                  "name": "Necesita a Micaela",
+                  "value": "Necesita a Micaela"
+                },
+                {
+                  "name": "Esperando seña",
+                  "value": "Esperando seña"
+                },
+                {
+                  "name": "Confirmado",
+                  "value": "Confirmado"
+                },
+                {
+                  "name": "Rechazado",
+                  "value": "Rechazado"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Presupuesto IA",
+              "displayName": "Presupuesto IA",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Turno de calendario",
+              "displayName": "Turno de calendario",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Comprobante de pago",
+              "displayName": "Comprobante de pago",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Mensaje original",
+              "displayName": "Mensaje original",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Errores",
+              "displayName": "Errores",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Foto de referencia",
+              "displayName": "Foto de referencia",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Teléfono",
+              "displayName": "Teléfono",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Aprobación enviada",
+              "displayName": "Aprobación enviada",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        1184,
+        -624
+      ],
+      "id": "3937d139-ea2e-49e7-bb01-596205da79b2",
+      "name": "Confirmar pedido",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "4QQXdFnze7blFw3o",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "ac71c256-0f07-4491-a689-92228b036900",
+              "leftValue": "={{ $('Mensaje de cliente').item.json.messages[0].type }}",
+              "rightValue": "text",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        96,
+        -96
+      ],
+      "id": "8b1dc869-5a2a-42ee-b244-77566de91b01",
+      "name": "¿Es texto?"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "={{ $('Mensaje de cliente').first().json.metadata.phone_number_id }}",
+        "recipientPhoneNumber": "={{ '54' + $('Mensaje de cliente').first().json.messages[0].from.slice(3, 7) + '15' + $('Mensaje de cliente').first().json.messages[0].from.slice(7) }}",
+        "textBody": "=   Por ahora solo puedo leer mensajes de texto y fotos 😊 ¿Me lo escribís?",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        16
+      ],
+      "id": "db7924db-efce-49bd-9e0a-de2e7add5568",
+      "name": "Pedir texto",
+      "webhookId": "3bf8845a-0c9f-4504-9b96-7d35f4e31716",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "ILt93lDLqKZ2LInV",
+          "name": "WhatsApp account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appDpbouNHfnobXDl",
+          "mode": "list",
+          "cachedResultName": "Pastelería Amelia- Pedidos",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbltZkcrxA4WIcz7n",
+          "mode": "list",
+          "cachedResultName": "Errores",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl/tbltZkcrxA4WIcz7n"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "Falla de la IA",
+            "Tipo de error": "IA Sin respuesta",
+            "Detalle": "={{ $json.error }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Pedido relacionado",
+              "displayName": "Pedido relacionado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Tipo de error",
+              "displayName": "Tipo de error",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "IA Sin respuesta",
+                  "value": "IA Sin respuesta"
+                },
+                {
+                  "name": "Datos incompletos",
+                  "value": "Datos incompletos"
+                },
+                {
+                  "name": "Pago fallido",
+                  "value": "Pago fallido"
+                },
+                {
+                  "name": "Calendario sin disponibilidad",
+                  "value": "Calendario sin disponibilidad"
+                },
+                {
+                  "name": "Otro",
+                  "value": "Otro"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Detalle",
+              "displayName": "Detalle",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        1344,
+        320
+      ],
+      "id": "f29e5366-0707-44b4-b170-8eb352dc465d",
+      "name": "Ruta de error de la IA",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "4QQXdFnze7blFw3o",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "={{ $('Mensaje de cliente').first().json.metadata.phone_number_id }}",
+        "recipientPhoneNumber": "={{ '54' + $('Mensaje de cliente').first().json.messages[0].from.slice(3, 7) + '15' + $('Mensaje de cliente').first().json.messages[0].from.slice(7) }}",
+        "textBody": "Disculpá, tuvimos un problema técnico 😔 Micaela te va a escribir a la brevedad.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        1536,
+        320
+      ],
+      "id": "8ab96f30-0969-4b85-84cf-a020cc8fee19",
+      "name": "Aviso de error al cliente",
+      "webhookId": "3bf8845a-0c9f-4504-9b96-7d35f4e31716",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "ILt93lDLqKZ2LInV",
+          "name": "WhatsApp account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# 1. Recepción y filtros\nRecibe el mensaje de WhatsApp, descarta notificaciones de estado (evita bucles), guarda o actualiza el cliente en Airtable y separa fotos, texto y otros formatos (audios/stickers).",
+        "height": 416,
+        "width": 1216,
+        "color": "#AFB215"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -784,
+        -256
+      ],
+      "id": "00ac281e-8598-4883-9c9b-93a418413b30",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "# 2. Secretaria con IA (Claude)\nConversa con el cliente, consulta productos, sabores y disponibilidad, calcula el presupuesto y guarda el pedido con estado \"Listo para revisión\" o \"Necesita a Micaela\".",
+        "height": 656,
+        "width": 784,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        512,
+        -208
+      ],
+      "id": "0affaf24-c390-4c3e-b6cf-dad410f25576",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "# 3. Si falla la IA (Resume)\nRegistra el error en la tabla Errores y avisa al cliente que Micaela le va a escribir. El flujo no se corta.",
+        "height": 288,
+        "width": 416,
+        "color": "#D41111"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1312,
+        192
+      ],
+      "id": "a509382a-642a-4e1a-9066-13d140801b2f",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "# 4. Aprobación de Micaela (Human-in-the-loop)\nEl flujo se detiene y envía un mail para aprobar o rechazar. Aprobado: agenda la entrega, cambia el estado y pide la seña del 50%. Rechazado: cambia el estado y avisa al cliente.",
+        "height": 368,
+        "width": 1360,
+        "color": "#31A919"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1328,
+        -192
+      ],
+      "id": "738eaa55-f4bc-408c-ac0b-de229c908c7e",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "# 5. Consultas especiales\nSi el cliente pide algo fuera del catálogo o quiere hablar con Micaela, ella recibe un mail, responde y su respuesta llega al cliente por WhatsApp.",
+        "height": 272,
+        "width": 912,
+        "color": "#8F1D91"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1344,
+        -496
+      ],
+      "id": "4bc5e274-0b86-47ee-95ae-3bb97b1259f3",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "# 6. Fotos: comprobante y referencia\nDescarga la foto y se la envía a Micaela por mail. Si el cliente tenía un pedido esperando seña, la toma como comprobante y confirma el pedido.",
+        "height": 272,
+        "width": 1280,
+        "color": "#FA6400"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        48,
+        -688
+      ],
+      "id": "58607361-127f-436f-a6b1-37aa3b83677d",
+      "name": "Sticky Note5"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Mensaje de cliente": {
+      "main": [
+        [
+          {
+            "node": "¿Es un mensaje?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Es un mensaje?": {
+      "main": [
+        [
+          {
+            "node": "Guardar clientes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar clientes": {
+      "main": [
+        [
+          {
+            "node": "¿Es una foto?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Secretaria",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Secretaria",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer productos": {
+      "ai_tool": [
+        [
+          {
+            "node": "Secretaria",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer sabores": {
+      "ai_tool": [
+        [
+          {
+            "node": "Secretaria",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Secretaria": {
+      "main": [
+        [
+          {
+            "node": "Responder al cliente",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ruta de error de la IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ver disponibilidad": {
+      "ai_tool": [
+        [
+          {
+            "node": "Secretaria",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar Pedido": {
+      "ai_tool": [
+        [
+          {
+            "node": "Secretaria",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Responder al cliente": {
+      "main": [
+        [
+          {
+            "node": "Buscar pedido listo",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Buscar consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar pedido listo": {
+      "main": [
+        [
+          {
+            "node": "Marcar aprobación enviada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marcar aprobación enviada": {
+      "main": [
+        [
+          {
+            "node": "Aprobación de Micaela",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Aprobado?": {
+      "main": [
+        [
+          {
+            "node": "Agendar entrega",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Estado rechazado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aprobación de Micaela": {
+      "main": [
+        [
+          {
+            "node": "¿Aprobado?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agendar entrega": {
+      "main": [
+        [
+          {
+            "node": "Estado Esperando seña",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Estado Esperando seña": {
+      "main": [
+        [
+          {
+            "node": "Pedir seña",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Estado rechazado": {
+      "main": [
+        [
+          {
+            "node": "Avisar rechazo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marcar consulta enviada": {
+      "main": [
+        [
+          {
+            "node": "Consulta a Micaela",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar consulta": {
+      "main": [
+        [
+          {
+            "node": "Marcar consulta enviada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consulta a Micaela": {
+      "main": [
+        [
+          {
+            "node": "Respuesta de Micaela",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Es una foto?": {
+      "main": [
+        [
+          {
+            "node": "Buscar pedido con seña",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "¿Es texto?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar pedido con seña": {
+      "main": [
+        [
+          {
+            "node": "Descargar foto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descargar foto": {
+      "main": [
+        [
+          {
+            "node": "Obtener imagen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener imagen": {
+      "main": [
+        [
+          {
+            "node": "Mail a Micaela",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mail a Micaela": {
+      "main": [
+        [
+          {
+            "node": "Responder foto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Responder foto": {
+      "main": [
+        [
+          {
+            "node": "¿Era comprobante?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Era comprobante?": {
+      "main": [
+        [
+          {
+            "node": "Confirmar pedido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Es texto?": {
+      "main": [
+        [
+          {
+            "node": "Secretaria",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pedir texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ruta de error de la IA": {
+      "main": [
+        [
+          {
+            "node": "Aviso de error al cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "timezone": "America/Argentina/Buenos_Aires",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "errorWorkflow": "LJ2XQ2vdvG5sTeD5"
+  },
+  "versionId": "d654a18b-2994-42b1-b5bf-470eebabab13",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "aa7452ed6077808ac2257cf03c1b1a7ded6d4ef3c6ca66997faf2cb113c32010"
+  },
+  "nodeGroups": [],
+  "id": "9Ag08QiNw87MQxqg",
+  "tags": []
+}
