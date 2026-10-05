@@ -1,0 +1,218 @@
+{
+  "name": "Errores-Pastelería Amelia",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "89bfdf60-a6bd-4941-8a19-5b84966d1704",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appDpbouNHfnobXDl",
+          "mode": "list",
+          "cachedResultName": "Pastelería Amelia- Pedidos",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbltZkcrxA4WIcz7n",
+          "mode": "list",
+          "cachedResultName": "Errores",
+          "cachedResultUrl": "https://airtable.com/appDpbouNHfnobXDl/tbltZkcrxA4WIcz7n"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "=Error en {{ $json.execution.lastNodeExecuted }}",
+            "Detalle": "={{ $json.execution.error.message }} - Ver ejecución: {{ $json.execution.url }}",
+            "Tipo de error": "Otro"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Pedido relacionado",
+              "displayName": "Pedido relacionado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Tipo de error",
+              "displayName": "Tipo de error",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "IA Sin respuesta",
+                  "value": "IA Sin respuesta"
+                },
+                {
+                  "name": "Datos incompletos",
+                  "value": "Datos incompletos"
+                },
+                {
+                  "name": "Pago fallido",
+                  "value": "Pago fallido"
+                },
+                {
+                  "name": "Calendario sin disponibilidad",
+                  "value": "Calendario sin disponibilidad"
+                },
+                {
+                  "name": "Otro",
+                  "value": "Otro"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Detalle",
+              "displayName": "Detalle",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "afa9a3c3-e643-4956-ae4a-54846997d400",
+      "name": "Registrar error",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "4QQXdFnze7blFw3o",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "micalorenzo1206@gmail.com",
+        "subject": "⚠️ Error en el bot de Pastelería Amelia",
+        "emailType": "text",
+        "message": "=  Falló el nodo: {{ $('Error Trigger').first().json.execution.lastNodeExecuted }}\n  Error: {{ $('Error Trigger').first().json.execution.error.message }}\n  Ver ejecución: {{ $('Error Trigger').first().json.execution.url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        448,
+        0
+      ],
+      "id": "30de5c90-3963-418f-a2fd-a9487623e592",
+      "name": "Avisar error",
+      "webhookId": "af751b71-4463-4a34-968b-ee319ae00dda",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Ej6TgBnCZdsp1ijk",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# Manejo de errores (Break)",
+        "height": 224,
+        "width": 688,
+        "color": "#DA0B0B"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        -80
+      ],
+      "id": "fb99305c-c4ab-4ecb-881b-6b9a127dd4b8",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Registrar error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registrar error": {
+      "main": [
+        [
+          {
+            "node": "Avisar error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "2376bf2a-d1cc-48af-89f3-b9b9c14ead4d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "aa7452ed6077808ac2257cf03c1b1a7ded6d4ef3c6ca66997faf2cb113c32010"
+  },
+  "nodeGroups": [],
+  "id": "LJ2XQ2vdvG5sTeD5",
+  "tags": []
+}
