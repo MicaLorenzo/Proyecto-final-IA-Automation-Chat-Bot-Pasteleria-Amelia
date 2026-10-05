@@ -10,8 +10,8 @@ Micaela antes de confirmar.
 - 📄 Documentación (diagrama, cumplimiento de la consigna y pruebas): `Proyecto_Final_IA_Automation.pdf`
 - ⚙️ Flujo principal: `Bot_Pasteleria_Amelia.json`
 - ⚙️ Workflow de errores: `Errores-Pastelería Amelia.json`
-- 🗄️ Base de datos (solo lectura): LINK_AIRTABLE
-- 🎬 Video demo: LINK_DRIVE
+- 🗄️ Base de datos (solo lectura): https://airtable.com/appDpbouNHfnobXDl/shrcL7nmBGeSD48N2
+- 🎬 Video demo: https://drive.google.com/file/d/11Y2y9HyugUaO_6GHGruzUCtyOWS3aQhL/view?usp=sharing 
 - 🖼️ Capturas de evidencia: carpeta `capturas/`
 
 ## Importar el flujo
